@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mandate — spend controls for AI agents</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.2.2/styles/ag-grid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.2.2/styles/ag-theme-quartz-dark.css" />
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #121821; --panel-2: #17202b; --line: #23303f;
+    --text: #e6edf5; --muted: #8b9bb0; --accent: #4cc2ff; --good: #3ddc97;
+    --warn: #ffcf5c; --bad: #ff6b6b; --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+  header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, #101721, #0b0f14); }
+  .logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #2a6cff); display: grid; place-items: center; font-weight: 800; color: #04121c; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .2px; }
+  .sub { color: var(--muted); font-size: 12px; }
+  .pill { font: 12px var(--mono); padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .pill.ok { color: var(--good); border-color: #1d4c3a; background: #0f241c; }
+  .pill.mock { color: var(--warn); border-color: #4a3d18; background: #241f0f; }
+  main { padding: 20px 24px 48px; max-width: 1440px; margin: 0 auto; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  .card .value { font-size: 26px; font-weight: 700; margin-top: 4px; }
+  .card .hint { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .cols { display: grid; grid-template-columns: 1fr 330px; gap: 16px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .panel .body { padding: 12px 16px; }
+  .grid { width: 100%; height: 300px; }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  input, select, button { font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; }
+  button { cursor: pointer; background: var(--accent); color: #05121b; border: 0; font-weight: 650; }
+  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: 500; }
+  button.small { padding: 4px 8px; font-size: 12px; width: auto; }
+  .row { display: flex; gap: 8px; }
+  .decision { margin-top: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); font: 12px var(--mono); white-space: pre-wrap; }
+  .decision.allow { border-color: #1d4c3a; background: #0f241c; }
+  .decision.escalate { border-color: #4a3d18; background: #241f0f; }
+  .decision.deny { border-color: #4a1f1f; background: #241010; }
+  .chip { font: 11px var(--mono); padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); }
+  .chip.captured, .chip.approved { color: var(--good); border-color: #1d4c3a; }
+  .chip.awaiting_approval { color: var(--warn); border-color: #4a3d18; }
+  .chip.denied { color: var(--bad); border-color: #4a1f1f; }
+  .modal { position: fixed; inset: 0; background: #05080cbf; display: none; place-items: center; }
+  .modal.open { display: grid; }
+  .modal .box { width: min(560px, 92vw); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .modal h3 { margin: 0 0 6px; }
+  code.token { display: block; padding: 10px; background: #0a0f15; border: 1px solid var(--line); border-radius: 8px; font: 12px var(--mono); word-break: break-all; margin: 10px 0; }
+  .toast { position: fixed; right: 20px; bottom: 20px; background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 8px; opacity: 0; transition: .2s; }
+  .toast.show { opacity: 1; }
+  footer { color: var(--muted); font-size: 12px; padding: 18px 24px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">M</div>
+  <div>
+    <h1>Mandate</h1>
+    <div class="sub">Spend controls, human approvals and an audit-grade ledger for AI agents that pay with PayPal</div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <span class="pill" id="driver">driver: …</span>
+    <span class="pill" id="integrity">audit: …</span>
+  </div>
+</header>
+
+<main>
+  <section class="stats">
+    <div class="card"><div class="label">Captured spend</div><div class="value" id="s-captured">$0.00</div><div class="hint" id="s-count">0 payments</div></div>
+    <div class="card"><div class="label">Awaiting approval</div><div class="value" id="s-pending">0</div><div class="hint">above the human threshold</div></div>
+    <div class="card"><div class="label">Denied by policy</div><div class="value" id="s-denied">0</div><div class="hint">no PayPal call was made</div></div>
+    <div class="card"><div class="label">Refunded</div><div class="value" id="s-refunded">$0.00</div><div class="hint">returned to the buyer</div></div>
+  </section>
+
+  <div class="panel" style="margin-bottom:16px">
+    <h2>Purchase intents</h2>
+    <div id="intents" class="ag-theme-quartz-dark grid" style="height:300px"></div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h2>PayPal ledger</h2>
+      <div id="ledger" class="ag-theme-quartz-dark grid" style="height:260px"></div>
+    </div>
+    <div class="side">
+      <div class="panel">
+        <h2>Agent purchase</h2>
+        <div class="body">
+          <label>Merchant</label>
+          <select id="merchant">
+            <option>northwind-supply</option>
+            <option>cloudstore</option>
+            <option>acme-furniture</option>
+          </select>
+          <label>Category</label>
+          <select id="category"><option>office</option><option>software</option><option>hardware</option><option>furniture</option></select>
+          <label>Amount (cents)</label>
+          <input id="amount" type="number" value="1500" min="1" />
+          <label>Description</label>
+          <input id="description" value="API credits, 1M tokens" />
+          <div style="margin-top:12px"><button id="buy">Attempt purchase</button></div>
+          <div class="decision" id="decision">Policy decisions appear here.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Policy simulator</h2>
+        <div class="body">
+          <label>Amount (cents)</label>
+          <input id="sim-amount" type="number" value="3000" />
+          <div style="margin-top:10px"><button class="ghost" id="simulate">Evaluate without paying</button></div>
+          <div class="decision" id="sim-decision">Dry run, no order created.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Mandate in force</h2>
+        <div class="body" id="mandate">…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <h2>Hash-chained audit trail</h2>
+    <div id="audit" class="ag-theme-quartz-dark grid" style="height:240px"></div>
+  </div>
+</main>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h3>Human approval</h3>
+    <div class="sub">This token is shown once. Give it to the agent, or complete the payment here.</div>
+    <code class="token" id="modal-token"></code>
+    <div class="row">
+      <button id="modal-fulfill">Fulfil now</button>
+      <button class="ghost" id="modal-close">Close</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<footer>Deterministic policy · single-use approval tokens · hash-chained audit log · PayPal Orders v2</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@32.2.2/dist/ag-grid-community.min.js"></script>
+<script>
+const money = (c) => "$" + (c / 100).toFixed(2);
+let state = null;
+let pendingApproval = null;
+
+const chip = (v) => { const s = document.createElement("span"); s.className = "chip " + v; s.textContent = v; return s; };
+const time = (v) => new Date(v).toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+const intentsGrid = agGrid.createGrid(document.getElementById("intents"), {
+  columnDefs: [
+    { field: "created_at", headerName: "Time", valueFormatter: p => time(p.value), width: 110 },
+    { field: "merchant", headerName: "Merchant", width: 150 },
+    { field: "amount_cents", headerName: "Amount", width: 100, valueFormatter: p => money(p.value), cellStyle: { fontFamily: "var(--mono)" } },
+    { field: "status", headerName: "Status", width: 150, cellRenderer: p => chip(p.value) },
+    { field: "reason_code", headerName: "Rule", width: 170, cellStyle: { fontFamily: "var(--mono)", fontSize: "12px" } },
+    { field: "reason", headerName: "Why", flex: 1, minWidth: 260 },
+    {
+      colId: "actions", headerName: "Action", width: 110, sortable: false, pinned: "right",
+      cellRenderer: p => {
+        const b = document.createElement("button");
+        b.className = "small" + (p.data.status === "captured" ? " ghost" : "");
+        if (p.data.status === "awaiting_approval") { b.textContent = "Approve"; b.dataset.approve = p.data.id; }
+        else if (p.data.status === "approved") { b.textContent = "Pay"; b.dataset.pay = p.data.id; }
+        else if (p.data.status === "captured") { b.textContent = "Refund"; b.dataset.refund = p.data.id; }
+        else return document.createTextNode("");
+        return b;
+      }
+    }
+  ],
+  rowData: [],
+  defaultColDef: { sortable: true, resizable: true }
+});
+
+document.addEventListener("click", (event) => {
+  const approve = event.target.dataset?.approve;
+  const refund = event.target.dataset?.refund;
+  const pay = event.target.dataset?.pay;
+  if (approve) approveIntent(approve);
+  if (refund) refundIntent(refund);
+  if (pay) payIntent(pay);
+});
+
+const ledgerGrid = agGrid.createGrid(document.getElementById("ledger"), {
+  columnDefs: [
+    { field: "created_at", headerName: "Time", valueFormatter: p => time(p.value), width: 105 },
+    { field: "kind", headerName: "Event", width: 100 },
+    { field: "provider_id", headerName: "PayPal id", flex: 1, minWidth: 220, cellStyle: { fontFamily: "var(--mono)", fontSize: "12px" } },
+    { field: "amount_cents", headerName: "Amount", width: 110, valueFormatter: p => money(p.value) },
+    { field: "status", headerName: "Status", width: 120 }
+  ],
+  rowData: []
+});
+
+const auditGrid = agGrid.createGrid(document.getElementById("audit"), {
+  columnDefs: [
+    { field: "ts", headerName: "Time", valueFormatter: p => time(p.value), width: 105 },
+    { field: "actor", headerName: "Actor", width: 170, cellStyle: { fontFamily: "var(--mono)", fontSize: "12px" } },
+    { field: "action", headerName: "Action", width: 210 },
+    { field: "hash", headerName: "Hash", flex: 1, minWidth: 160, valueFormatter: p => p.value.slice(0, 16) + "…", cellStyle: { fontFamily: "var(--mono)", fontSize: "12px" } }
+  ],
+  rowData: []
+});
+
+async function refresh() {
+  const res = await fetch("/api/state");
+  state = await res.json();
+  document.getElementById("s-captured").textContent = money(state.totals.captured_cents);
+  const n = state.intents.filter(i => i.status === "captured").length;
+  document.getElementById("s-count").textContent = n + (n === 1 ? " payment" : " payments");
+  document.getElementById("s-pending").textContent = state.totals.awaiting_approval;
+  document.getElementById("s-denied").textContent = state.totals.denied;
+  document.getElementById("s-refunded").textContent = money(state.totals.refunded_cents);
+  document.getElementById("driver").textContent = "driver: " + state.driver;
+  document.getElementById("driver").className = "pill " + (state.driver === "mock" ? "mock" : "ok");
+  document.getElementById("integrity").textContent = "audit: " + (state.integrity.ok ? "verified " + state.integrity.length : "BROKEN");
+  document.getElementById("integrity").className = "pill " + (state.integrity.ok ? "ok" : "");
+  intentsGrid.setGridOption("rowData", state.intents);
+  ledgerGrid.setGridOption("rowData", state.transactions);
+  auditGrid.setGridOption("rowData", state.audit);
+  const m = state.mandates[0];
+  document.getElementById("mandate").innerHTML = m ? `
+    <div style="font-weight:600">${m.name}</div>
+    <div class="sub" style="margin:4px 0 10px">agent: <code>${m.agent_id}</code></div>
+    <div class="sub">per transaction <b>${money(m.per_tx_cap_cents)}</b> · per day <b>${money(m.daily_cap_cents)}</b></div>
+    <div class="sub">human approval above <b>${money(m.approval_threshold_cents)}</b></div>
+    <div class="sub" style="margin-top:8px">merchants: ${m.merchant_allowlist.join(", ")}</div>
+    <div class="sub">categories: ${m.category_allowlist.join(", ") || "any"}</div>` : "No mandate yet.";
+}
+
+async function post(path, body) {
+  const res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  return { ok: res.ok, data: await res.json() };
+}
+
+document.getElementById("buy").onclick = async () => {
+  const body = {
+    agent_id: "procurement-agent",
+    merchant: document.getElementById("merchant").value,
+    category: document.getElementById("category").value,
+    amount_cents: Number(document.getElementById("amount").value),
+    description: document.getElementById("description").value
+  };
+  const { data } = await post("/api/intents", body);
+  const d = document.getElementById("decision");
+  d.className = "decision " + (data.decision?.outcome ?? "deny");
+  d.textContent = data.decision
+    ? `${data.decision.outcome.toUpperCase()} · ${data.decision.code}\n${data.decision.reason}`
+    : JSON.stringify(data);
+  refresh();
+};
+
+document.getElementById("simulate").onclick = async () => {
+  const { data } = await post("/api/simulate", { agent_id: "procurement-agent", merchant: document.getElementById("merchant").value, category: document.getElementById("category").value, amount_cents: Number(document.getElementById("sim-amount").value) });
+  const el = document.getElementById("sim-decision");
+  el.className = "decision " + data.decision.outcome;
+  el.textContent = `${data.decision.outcome.toUpperCase()} · ${data.decision.code}\n${data.decision.reason}`;
+};
+
+async function approveIntent(id) {
+  const { data } = await post(`/api/intents/${id}/approve`, { approved_by: "owner" });
+  if (data.error) return toast(data.error);
+  pendingApproval = { id, token: data.token };
+  document.getElementById("modal-token").textContent = data.token;
+  document.getElementById("modal").classList.add("open");
+  refresh();
+}
+
+document.getElementById("modal-fulfill").onclick = async () => {
+  if (!pendingApproval) return;
+  const { data } = await post(`/api/intents/${pendingApproval.id}/fulfill`, { token: pendingApproval.token });
+  document.getElementById("modal").classList.remove("open");
+  toast(data.error ?? "Payment captured");
+  pendingApproval = null;
+  refresh();
+};
+document.getElementById("modal-close").onclick = () => document.getElementById("modal").classList.remove("open");
+
+async function payIntent(id) {
+  const { data } = await post(`/api/intents/${id}/fulfill`, {});
+  toast(data.error ?? "Payment captured");
+  refresh();
+}
+
+async function refundIntent(id) {
+  const { data } = await post(`/api/intents/${id}/refund`, {});
+  toast(data.error ?? "Refund issued");
+  refresh();
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

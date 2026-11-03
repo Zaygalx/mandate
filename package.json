@@ -1,0 +1,15 @@
+{
+  "name": "mandate",
+  "version": "1.0.0",
+  "description": "Spend mandates for AI agents: policy, approvals and an audit-grade ledger on top of the PayPal Orders API.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "demo": "node scripts/demo.mjs",
+    "mcp": "node src/mcp.mjs",
+    "test": "node --test test/"
+  },
+  "dependencies": {}
+}
