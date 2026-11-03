@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mandate: spend controls for agents that pay</title>
+<meta name="description" content="Deterministic spend limits, single use human approvals and a hash chained audit trail for AI agents that pay with PayPal." />
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #121821; --line: #22303f; --text: #e6edf5; --muted: #93a4b8;
+    --accent: #4cc2ff; --good: #3ddc97; --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  header.site { padding: 28px 0 8px; display: flex; align-items: center; gap: 12px; }
+  .logo { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--accent), #2a6cff); color: #04121c; font-weight: 800; }
+  header.site strong { font-size: 18px; letter-spacing: -0.01em; }
+  header.site nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; color: var(--muted); }
+  .hero { padding: 56px 0 28px; }
+  h1 { font-size: 54px; line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; }
+  h1 span { color: var(--muted); display: block; font-size: 24px; font-weight: 400; letter-spacing: -0.01em; margin-top: 14px; }
+  .lede { font-size: 18px; color: #c3d1e0; max-width: 760px; }
+  .cta { display: flex; gap: 12px; margin: 26px 0 8px; flex-wrap: wrap; }
+  .btn { padding: 10px 16px; border-radius: 9px; border: 1px solid var(--line); color: var(--text); font-weight: 550; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #05121b; }
+  video { width: 100%; border-radius: 14px; border: 1px solid var(--line); background: #000; display: block; }
+  .caption { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  section { padding: 42px 0; border-top: 1px solid var(--line); margin-top: 42px; }
+  h2 { font-size: 26px; letter-spacing: -0.02em; margin: 0 0 18px; }
+  h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 0 0 8px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .card p { margin: 0; color: #b7c6d6; font-size: 15px; }
+  pre { background: #0a0f15; border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px;
+    overflow-x: auto; font: 13.5px/1.7 var(--mono); color: #d7e6f5; }
+  code { font-family: var(--mono); font-size: .92em; color: #cfe3f5; }
+  img.shot { width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; }
+  ul.checks { list-style: none; padding: 0; margin: 0; }
+  ul.checks li { padding-left: 22px; position: relative; margin: 6px 0; color: #b7c6d6; }
+  ul.checks li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+  footer { color: var(--muted); font-size: 13px; padding: 34px 0 50px; border-top: 1px solid var(--line); margin-top: 40px; }
+  @media (max-width: 760px) {
+    h1 { font-size: 38px; } h1 span { font-size: 19px; }
+    .grid3 { grid-template-columns: 1fr; } header.site nav { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <div class="logo">M</div>
+    <strong>Mandate</strong>
+    <nav>
+      <a href="#demo">Demo</a>
+      <a href="#how">How it works</a>
+      <a href="#run">Run it</a>
+      <a href="https://github.com/Zaygalx/mandate">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Let agents spend.<br />On your terms.
+      <span>Spend limits, human approvals and an audit grade ledger for AI agents that pay with PayPal.</span>
+    </h1>
+    <p class="lede">An agent with a card is a liability. An agent with a mandate is a colleague. Mandate
+      evaluates every purchase against a deterministic policy before a PayPal order exists, escalates what
+      needs a human, and writes a hash chained record of everything.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/Zaygalx/mandate">Read the code</a>
+      <a class="btn" href="#demo">Watch the demo</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="demo">
+  <video controls preload="metadata" poster="console.png" src="mandate-demo.mp4"></video>
+  <div class="caption">Recorded against the built in mock driver, so the whole flow runs without credentials.
+    Set <code>PAYPAL_MODE=sandbox</code> to place real Orders v2 calls. Narration: synthetic voice.</div>
+</div>
+
+<div class="wrap">
+  <section id="how">
+    <h2>One policy, three surfaces</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3>Decide</h3>
+        <p>Six ordered rules, a pure function, no model in the payment path. Same input, same answer, every time.</p>
+      </div>
+      <div class="card">
+        <h3>Approve</h3>
+        <p>Above the threshold, policy escalates. A human mints a single use token that expires in fifteen minutes.</p>
+      </div>
+      <div class="card">
+        <h3>Prove</h3>
+        <p>Every decision, order, capture, refund and approval is chained by hash. Edit one row and verification breaks.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:38px">The console</h2>
+    <img class="shot" src="console.png" alt="Mandate console showing stats, purchase intents, PayPal ledger and audit trail" />
+    <div class="caption">Intents carry the rule that decided them. The ledger carries the PayPal order and capture
+      identifiers. The audit trail carries the chain.</div>
+
+    <h2 style="margin-top:38px">The approval moment</h2>
+    <img class="shot" src="approval.png" alt="Human approval modal with a single use token" />
+    <div class="caption">The token is shown once, stored as a SHA-256 hash, bound to one intent, and refused on replay.</div>
+  </section>
+
+  <section>
+    <h2>What the agent sees</h2>
+    <p class="lede" style="font-size:16px">Over MCP, a purchase returns one of three outcomes. The agent cannot
+      approve itself, and a denial means no PayPal call was ever made.</p>
+    <pre>{
+  "status": "captured",          "paid": true,   "capture_id": "MOCK-CAPTURE-..."   // within the mandate
+}
+{
+  "status": "awaiting_approval", "paid": false,  "intent_id": "int_...",
+  "code": "APPROVAL_REQUIRED"                                                        // a human must say yes
+}
+{
+  "status": "denied",            "paid": false,  "code": "PER_TX_CAP"               // before any order exists
+}</pre>
+  </section>
+
+  <section id="run">
+    <h2>Run it</h2>
+    <pre>git clone https://github.com/Zaygalx/mandate
+cd mandate
+node --test          # 25 tests, no credentials
+node scripts/demo.mjs
+node src/server.mjs  # http://localhost:8787</pre>
+    <ul class="checks">
+      <li>Node 24 or newer, zero dependencies thanks to <code>node:sqlite</code></li>
+      <li>Mock PayPal driver by default; <code>PAYPAL_MODE=sandbox</code> for real sandbox orders</li>
+      <li>MCP server at <code>src/mcp.mjs</code> for any MCP capable agent</li>
+      <li>MIT licensed</li>
+    </ul>
+  </section>
+
+  <footer>
+    Built by Hassan Dosunmu for the PayPal AI Hackathon, Agentic Commerce track. Implementation and review
+    assisted by Hermes Agent running DeepSeek. <a href="https://github.com/Zaygalx/mandate">Source</a>.
+  </footer>
+</div>
+</body>
+</html>
