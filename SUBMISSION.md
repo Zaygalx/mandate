@@ -94,6 +94,18 @@ Weekly and monthly budget periods, per merchant caps, a webhook listener for
 asynchronous captures and disputes, shared team mandates, and an exportable
 audit bundle for finance review.
 
+## Tools we used, and how
+
+- **DeepSeek** (deepseek-flash) wrote and reviewed the Node source, the tests and the
+  submission copy, driven by Hermes Agent, an autonomous coding agent.
+- **Playwright** and Chromium recorded the demo film from the live console, so the
+  video is a real session rather than a mockup.
+- **ffmpeg** cut the recording into scenes and laid the narration under each scene.
+- **Firecrawl** extracted the hackathon rules and judging criteria from the Devpost page.
+- **GitHub CLI** published the repository, the release and the Pages demo.
+- No AI service sits in the payment path: the policy engine is a deterministic
+  function, which is the point of the project.
+
 ## Built with
 
 node.js, node:sqlite, PayPal Orders API v2, PayPal Payments API v2, MCP
