@@ -8,6 +8,8 @@ Mandate is a small, dependency-free Node service that sits between an AI agent a
 
 Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/) (Agentic Commerce track).
 
+**Demo film and screenshots:** https://zaygalx.github.io/mandate/ (109 seconds, recorded against the mock driver)
+
 ```
                  ┌──────────────────┐        ┌───────────────────┐
   agent (MCP) ──▶│  policy engine   │───────▶│  PayPal Orders v2 │
