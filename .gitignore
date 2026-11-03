@@ -7,3 +7,14 @@ node_modules/
 *.db-wal
 .DS_Store
 coverage/
+
+# film source material and renders
+film/raw/
+film/out/
+film/vo/
+film/*.mp4
+film/*.webm
+film/*.jpg
+film/*.log
+film/timings.json
+film/demo.db*

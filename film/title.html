@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Mandate</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(1200px 700px at 20% -10%, #123 0%, #0b0f14 55%, #070a0e 100%);
+    color: #e6edf5; font-family: Inter, system-ui, sans-serif; overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .grid {
+    position: fixed; inset: 0; opacity: .16;
+    background-image: linear-gradient(#243343 1px, transparent 1px), linear-gradient(90deg, #243343 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 72%);
+  }
+  .wrap { position: relative; text-align: center; padding: 0 60px; }
+  .mark {
+    width: 74px; height: 74px; border-radius: 20px; margin: 0 auto 34px;
+    background: linear-gradient(135deg, #4cc2ff, #2a6cff); display: grid; place-items: center;
+    font-weight: 800; font-size: 38px; color: #04121c;
+    box-shadow: 0 20px 60px #2a6cff44;
+  }
+  h1 { font-size: 96px; letter-spacing: -0.03em; font-weight: 800; }
+  .rule { width: 120px; height: 2px; background: #4cc2ff; margin: 26px auto; opacity: .8; }
+  p.tag { font-size: 27px; color: #9fb0c4; font-weight: 300; max-width: 900px; line-height: 1.45; }
+  p.tag b { color: #e6edf5; font-weight: 600; }
+  .meta { margin-top: 46px; font: 13px "JetBrains Mono", monospace; color: #6f8298; letter-spacing: .14em; text-transform: uppercase; }
+  .meta span { color: #4cc2ff; }
+  .foot { position: fixed; bottom: 30px; left: 0; right: 0; text-align: center; font: 12px "JetBrains Mono", monospace; color: #55677c; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="wrap">
+    <div class="mark">M</div>
+    <h1>Mandate</h1>
+    <div class="rule"></div>
+    <p class="tag">Spend controls, human approvals and an audit-grade ledger<br/>for <b>AI agents that pay with PayPal</b>.</p>
+    <div class="meta">PayPal AI Hackathon <span>·</span> Agentic Commerce</div>
+  </div>
+  <div class="foot">narration: synthetic voice</div>
+</body>
+</html>

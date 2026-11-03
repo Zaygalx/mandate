@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Mandate</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(1000px 600px at 80% 110%, #132738 0%, #0b0f14 60%, #070a0e 100%);
+    color: #e6edf5; font-family: Inter, system-ui, sans-serif; display: grid; place-items: center;
+  }
+  .box { width: 1100px; }
+  .top { display: flex; align-items: center; gap: 18px; margin-bottom: 34px; }
+  .mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #4cc2ff, #2a6cff); display: grid; place-items: center; font-weight: 800; color: #04121c; }
+  h2 { font-size: 46px; letter-spacing: -0.02em; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card { border: 1px solid #23303f; border-radius: 14px; padding: 20px 22px; background: #121821; }
+  .card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: #7f93a8; margin-bottom: 12px; font-weight: 600; }
+  code, .mono { font-family: "JetBrains Mono", monospace; font-size: 15px; color: #cfe3f5; }
+  .line { margin: 8px 0; color: #9fb0c4; font-size: 16px; }
+  .accent { color: #4cc2ff; }
+  .url { margin-top: 30px; font: 16px "JetBrains Mono", monospace; color: #9fb0c4; }
+  .url b { color: #e6edf5; }
+  .foot { position: fixed; bottom: 28px; right: 34px; font: 12px "JetBrains Mono", monospace; color: #55677c; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <div class="mark">M</div>
+      <div>
+        <h2>Mandate</h2>
+        <div class="mono" style="color:#7f93a8">spend controls for agents that pay</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Run it</h3>
+        <div class="line"><code>node --test</code> <span class="accent">25 tests</span></div>
+        <div class="line"><code>node scripts/demo.mjs</code></div>
+        <div class="line"><code>node src/server.mjs</code></div>
+        <div class="line" style="margin-top:14px;font-size:14px">Node 24 · zero dependencies · MIT</div>
+      </div>
+      <div class="card">
+        <h3>Under the hood</h3>
+        <div class="line">Deterministic policy, 6 rules</div>
+        <div class="line">Single use approval tokens</div>
+        <div class="line">Hash chained audit trail</div>
+        <div class="line">MCP server · PayPal Orders v2</div>
+      </div>
+    </div>
+
+    <div class="url"><b>github.com/Zaygalx/mandate</b> &nbsp;·&nbsp; mock driver by default, <span class="accent">PAYPAL_MODE=sandbox</span> for real orders</div>
+  </div>
+  <div class="foot">narration: synthetic voice</div>
+</body>
+</html>

@@ -80,13 +80,13 @@
 
   <div class="panel" style="margin-bottom:16px">
     <h2>Purchase intents</h2>
-    <div id="intents" class="ag-theme-quartz-dark grid" style="height:300px"></div>
+    <div id="intents" class="ag-theme-quartz-dark grid" style="height:230px"></div>
   </div>
 
   <div class="cols">
     <div class="panel">
       <h2>PayPal ledger</h2>
-      <div id="ledger" class="ag-theme-quartz-dark grid" style="height:260px"></div>
+      <div id="ledger" class="ag-theme-quartz-dark grid" style="height:200px"></div>
     </div>
     <div class="side">
       <div class="panel">
@@ -128,7 +128,7 @@
 
   <div class="panel" style="margin-top:16px">
     <h2>Hash-chained audit trail</h2>
-    <div id="audit" class="ag-theme-quartz-dark grid" style="height:240px"></div>
+    <div id="audit" class="ag-theme-quartz-dark grid" style="height:220px"></div>
   </div>
 </main>
 
@@ -162,7 +162,7 @@ const intentsGrid = agGrid.createGrid(document.getElementById("intents"), {
     { field: "amount_cents", headerName: "Amount", width: 100, valueFormatter: p => money(p.value), cellStyle: { fontFamily: "var(--mono)" } },
     { field: "status", headerName: "Status", width: 150, cellRenderer: p => chip(p.value) },
     { field: "reason_code", headerName: "Rule", width: 170, cellStyle: { fontFamily: "var(--mono)", fontSize: "12px" } },
-    { field: "reason", headerName: "Why", flex: 1, minWidth: 260 },
+    { field: "reason", headerName: "Why", flex: 1, minWidth: 280, wrapText: true, cellStyle: { lineHeight: "1.35" } },
     {
       colId: "actions", headerName: "Action", width: 110, sortable: false, pinned: "right",
       cellRenderer: p => {
@@ -177,6 +177,7 @@ const intentsGrid = agGrid.createGrid(document.getElementById("intents"), {
     }
   ],
   rowData: [],
+  rowHeight: 44,
   defaultColDef: { sortable: true, resizable: true }
 });
 
