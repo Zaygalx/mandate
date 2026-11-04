@@ -1,0 +1,105 @@
+# Devpost project page: paste blocks
+
+## About the project (Markdown, paste into the story field)
+
+### Inspiration
+
+Agents can already hold a card number. The moment they can spend, every team that tries it
+hits the same wall: there is no layer between an agent's good intentions and a payment it
+should not make.
+
+Prompt instructions are not a control. A spending limit written in a prompt is a suggestion,
+and an agent that has been talked out of one limit will find the next purchase. We wanted the
+control to be code that runs before PayPal is ever called, and a record that survives review
+six months later.
+
+### What it does
+
+Mandate puts a deterministic spend policy between an AI agent and PayPal.
+
+- A **mandate** declares the rules: per transaction cap, daily cap, approval threshold,
+  velocity limit, allowed merchants, allowed categories, currency.
+- The agent requests a **purchase intent**. The policy engine answers **allowed**,
+  **escalated** or **denied**, and names the rule that decided it.
+- An allowed intent becomes a PayPal order and is captured in the same flow.
+- An escalated intent waits for a human. Approval mints a **single use token**, stored as a
+  SHA-256 hash, bound to that one intent, expiring in fifteen minutes. Replaying it is
+  refused, and only one approval row can ever be consumed.
+- Every decision, order, capture, refund and approval is written to a **hash chained audit
+  log**. Change one row and verification fails, which is what makes the trail worth reading.
+
+Three surfaces, one engine: an MCP stdio server for agents, an HTTP API for everything else,
+and a console for the human who has to say yes. The console is the surface judges see: it
+shows the rule that decided each purchase, the PayPal order and capture identifiers, and the
+live integrity check on the audit chain.
+
+### How we built it
+
+Zero runtime dependencies. The service runs on Node 24's built in SQLite, so a judge clones
+the repository and runs the tests without installing anything, which matters when the
+reviewer is skimming twenty submissions.
+
+The PayPal driver is an interface with two implementations. The mock returns deterministic
+order and capture identifiers so the whole flow runs offline with no credentials. The sandbox
+driver speaks Orders v2 and Payments v2 over REST with OAuth2 client credentials, and is
+selected with one environment variable, `PAYPAL_MODE=sandbox`. The public demo runs the mock
+driver on purpose, so judges can click through a capture and a refund without anyone's client
+secret in the loop.
+
+The policy engine is a pure function over an ordered rule table. That made it cheap to test
+exhaustively: allow inside the limits, deny without a mandate or outside a cap, deny on
+currency mismatch, escalate above the approval threshold, enforce velocity, refuse malformed
+amounts. Same input, same answer, every time, because a model in the payment path would make
+the audit trail a matter of opinion.
+
+The console came last and taught the sharpest lesson. The table renderer, the approval modal
+and the click handling each had to be fixed before the flow felt real: buttons that rendered
+as markup but never fired, an action column that vanished because two columns shared an empty
+identifier, a modal that opened below the fold. Every one of those was found by driving the
+real page and looking at it, not by reading the code.
+
+### Challenges
+
+The hard part was not the PayPal calls. It was making human approval genuinely safe rather
+than decorative. An approval token that can be reused is a backdoor with a nice dialog. Ours
+is stored only as a hash, single use, bound to one intent, time limited, and the tests assert
+that reuse fails and that exactly one approval row is consumed.
+
+The second challenge was a trustworthy audit trail without a database server. Chaining each
+entry to the hash of its predecessor is enough to make silent edits detectable, and the
+console runs verification in front of you rather than asking you to trust a log file.
+
+The third was honesty in the demo. It is easy to make a payment flow look impressive by
+faking the happy path. The demo instead shows a denial, where no PayPal order exists at all,
+next to an approval, so the difference in cost is visible.
+
+### Accomplishments
+
+- 25 tests across policy, HTTP flow, approval tokens, refunds and the MCP server.
+- A demo that runs with no credentials, then reaches real PayPal sandbox endpoints by changing
+  one environment variable.
+- An approval step designed as a control rather than a speed bump, with replay covered by
+  tests.
+- A judge can verify the audit chain themselves in the console.
+
+### What we learned
+
+Controls that live in a prompt are not controls. Moving the decision into a deterministic
+function before the payment call changes the failure mode from "the agent spent money it
+should not have" to "the agent was told no, and here is the rule that said so".
+
+We also learned that the human interface is part of the security model. If the approval
+dialog is slow or unclear, people will approve anything to get back to work.
+
+### What's next
+
+Per agent budgets over longer windows, merchant reputation signals carried between sessions,
+and a second payment driver so the same mandate governs card rails and not only PayPal. The
+policy engine is deliberately boring, which means it can govern more than one rail without
+being rewritten.
+
+## Built with (tags, up to 25)
+
+Node.js, JavaScript, SQLite, PayPal, PayPal REST API, OAuth 2.0, Model Context Protocol,
+AG Grid, Playwright, FFmpeg, HTML5, CSS3, REST API, JSON, DeepSeek, AI Agents, AI Agent
+Security, Human in the Loop, Audit Trail, Developer Tools, Fintech
