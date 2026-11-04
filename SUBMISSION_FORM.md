@@ -24,9 +24,9 @@ Value: https://github.com/Zaygalx/mandate
 MIT license visible in the About panel. Tests: 25 pass.
 
 Field: Functional demo (hosted URL)
-Value: https://cups-private-bread-celebrity.trycloudflare.com
-What it is: the real console and HTTP API on the project host, mock PayPal driver, no login. Judges can place a purchase, watch policy decide, approve an escalated one, and read the audit chain.
-Caveat: this URL is a quick tunnel and changes if the tunnel restarts. For a permanent URL, deploy the same repo to Render with the included render.yaml (free plan, Node 24, health check /api/state). Render is also a $1,000 credits prize track.
+Value: https://mandate-w608.onrender.com
+What it is: the real console and HTTP API deployed on Render (free plan, Node 24, health check /api/state), mock PayPal driver, no login. Judges can place a purchase, watch policy decide, approve an escalated one, and read the audit chain. Free instances sleep after idle, so the first visit can take about thirty seconds to wake.
+This also puts the project in the Best Use of Render credits track.
 
 Field: Functional demo (self run, the durable path)
 Value: "git clone https://github.com/Zaygalx/mandate && cd mandate && node --test && node src/server.mjs" then open http://localhost:8787. Node 24 or newer, no dependencies, no credentials.
