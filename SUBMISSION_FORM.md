@@ -25,7 +25,7 @@ MIT license visible in the About panel. Tests: 25 pass.
 
 Field: Functional demo (hosted URL)
 Value: https://mandate-w608.onrender.com
-What it is: the real console and HTTP API deployed on a paid Render instance (0.5 CPU, 512 MB, Node 24, health check /api/state, no cold start), mock PayPal driver, no login. Judges can place a purchase, watch policy decide, approve an escalated one, and read the audit chain. The ledger is seeded on first boot so the console opens with a captured payment, a denial and a pending approval.
+What it is: the real console and HTTP API deployed on a paid Render instance (0.5 CPU, 512 MB, Node 24, health check /api/state, no cold start), mock PayPal driver, no login. Judges can place a purchase, watch policy decide, approve an escalated one, and read the audit chain. The ledger lives on a persistent disk, so the hash chain survives deploys, and it is seeded on first boot so the console opens with a captured payment, a denial and a pending approval.
 This also puts the project in the Best Use of Render credits track.
 
 Field: Functional demo (self run, the durable path)
