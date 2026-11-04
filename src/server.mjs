@@ -158,8 +158,34 @@ async function readJson(req) {
   }
 }
 
+// A hosted console should never greet a judge with an empty table. When the
+// environment opts in and the database is fresh, seed one captured purchase,
+// one denial and one purchase waiting for a human, so the first screen shows
+// the whole argument.
+async function seedDemo(db, service) {
+  if (process.env.MANDATE_SEED_DEMO !== "1") return;
+  const n = db.prepare("SELECT COUNT(*) AS n FROM intents").get().n;
+  if (n > 0) return;
+  const mandate = service.state().mandates[0];
+  if (!mandate) return;
+  const base = { mandate_id: mandate.id, agent_id: mandate.agent_id, currency: "USD" };
+  try {
+    const ok = service.requestIntent({ ...base, merchant: "cloudstore", category: "software",
+      amount_cents: 1500, description: "API credits, 1M tokens" });
+    if (ok.intent?.id) await service.fulfillIntent(ok.intent.id, ok.token);
+    service.requestIntent({ ...base, merchant: "cloudstore", category: "hardware",
+      amount_cents: 8900, description: "1TB NVMe SSD for the build box" });
+    service.requestIntent({ ...base, merchant: "northwind-supply", category: "office",
+      amount_cents: 4200, description: "Black toner cartridge" });
+    console.log("seeded demo intents");
+  } catch (err) {
+    console.error("demo seed skipped:", err.message);
+  }
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const { server } = buildApp();
+  const { server, db, service } = buildApp();
+  await seedDemo(db, service);
   server.listen(PORT, () => {
     console.log(`Mandate console on http://localhost:${PORT} (PayPal driver: ${process.env.PAYPAL_MODE ?? "mock"})`);
   });
