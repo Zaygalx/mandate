@@ -1,5 +1,8 @@
 # Mandate
 
+<p align="center"><img src="public/logo.png" width="96" alt="Mandate logo"></p>
+
+
 **Spend controls, human approvals and an audit-grade ledger for AI agents that pay with PayPal.**
 
 An agent with a card is a liability. An agent with a *mandate* is a colleague.

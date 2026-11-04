@@ -4,6 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Mandate — spend controls for AI agents</title>
+<link rel="icon" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/logo.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.2.2/styles/ag-grid.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.2.2/styles/ag-theme-quartz-dark.css" />
 <style>
@@ -15,7 +17,8 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
   header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, #101721, #0b0f14); }
-  .logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #2a6cff); display: grid; place-items: center; font-weight: 800; color: #04121c; }
+  .logo { width: 30px; height: 30px; border-radius: 8px; background: #f6f8fb; display: grid; place-items: center; box-shadow: 0 0 0 1px #ffffff1a inset; }
+  .logo img { width: 22px; height: 22px; display: block; }
   h1 { font-size: 17px; margin: 0; letter-spacing: .2px; }
   .sub { color: var(--muted); font-size: 12px; }
   .pill { font: 12px var(--mono); padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
@@ -59,7 +62,7 @@
 </head>
 <body>
 <header>
-  <div class="logo">M</div>
+  <div class="logo"><img src="/mark-navy.png" alt="" /></div>
   <div>
     <h1>Mandate</h1>
     <div class="sub">Spend controls, human approvals and an audit-grade ledger for AI agents that pay with PayPal</div>
