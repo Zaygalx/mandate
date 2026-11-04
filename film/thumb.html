@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @page { margin: 0; }
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0b0f14; }
+  .frame { position: relative; width: 1280px; height: 720px; overflow: hidden;
+    font-family: Inter, -apple-system, "Segoe UI", system-ui, sans-serif; color: #e6edf5;
+    background:
+      radial-gradient(900px 520px at 78% -10%, #12314a 0%, transparent 60%),
+      radial-gradient(700px 420px at 8% 108%, #0f2a33 0%, transparent 62%),
+      #0b0f14;
+  }
+  .grid { position: absolute; inset: 0; opacity: .35;
+    background-image: linear-gradient(#1b2a3a 1px, transparent 1px), linear-gradient(90deg, #1b2a3a 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(900px 600px at 30% 20%, #000 20%, transparent 78%);
+  }
+  .shot { position: absolute; right: -170px; top: 96px; width: 780px; border-radius: 12px;
+    border: 1px solid #2a3d51; box-shadow: 0 30px 90px #000c; transform: rotate(-1.2deg); opacity: .95; z-index: 1; }
+  .veil { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(90deg, #0b0f14 22%, #0b0f14e6 40%, #0b0f1400 66%); }
+  .left { position: absolute; left: 64px; top: 80px; width: 600px; z-index: 3; }
+  .mark { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #4cc2ff, #2a6cff); color: #04121c; font-weight: 800; font-size: 28px;
+    margin-bottom: 26px; }
+  h1 { font-size: 64px; line-height: 1.02; letter-spacing: -0.04em; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: #4cc2ff; }
+  .sub { font-size: 21px; line-height: 1.42; color: #c3d1e0; margin: 0 0 26px; max-width: 540px; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip { font: 500 14px/1 ui-monospace, "SF Mono", Menlo, monospace; color: #9fb3c8;
+    border: 1px solid #2a3d51; background: #101823; padding: 10px 13px; border-radius: 999px; }
+  .foot { position: absolute; left: 64px; bottom: 44px; z-index: 3; font-size: 15px; color: #7d90a5; letter-spacing: .01em; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="grid"></div>
+  <img class="shot" src="../docs/console.png" alt="" />
+  <div class="veil"></div>
+  <div class="left">
+    <div class="mark">M</div>
+    <h1>Let agents spend.<br /><em>On your terms.</em></h1>
+    <p class="sub">Deterministic spend limits, single use human approvals and a hash chained audit trail for AI agents that pay with PayPal.</p>
+    <div class="chips">
+      <span class="chip">PayPal Orders v2</span>
+      <span class="chip">MCP server</span>
+      <span class="chip">zero dependencies</span>
+    </div>
+  </div>
+  <div class="foot">PayPal AI Hackathon 2026 · github.com/Zaygalx/mandate</div>
+</div>
+</body>
+</html>

@@ -114,10 +114,11 @@ node.js, node:sqlite, PayPal Orders API v2, PayPal Payments API v2, MCP
 ## Links
 
 - Repository: https://github.com/Zaygalx/mandate
+- Demo video (YouTube, 109s, public): https://youtu.be/RLDdUNBafmk
+- Hosted demo, no login, mock PayPal driver: https://cnet-enquiries-cached-quarters.trycloudflare.com
 - Demo page (film, screenshots, protocol example): https://zaygalx.github.io/mandate/
-- Video file (direct MP4, 109s): https://zaygalx.github.io/mandate/mandate-demo.mp4
-- Release with the same film attached: https://github.com/Zaygalx/mandate/releases/tag/v1.0.0
-- Demo: runs locally with `node --test`, `node scripts/demo.mjs`, `node src/server.mjs`
+- Release with the film attached: https://github.com/Zaygalx/mandate/releases/tag/v1.0.0
+- Self run: `node --test`, `node scripts/demo.mjs`, `node src/server.mjs`
 
 ## Judge test path
 

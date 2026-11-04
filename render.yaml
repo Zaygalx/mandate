@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mandate
+    runtime: node
+    plan: free
+    buildCommand: echo "no build step, zero dependencies"
+    startCommand: node src/server.mjs
+    healthCheckPath: /api/state
+    envVars:
+      - key: NODE_VERSION
+        value: 24.11.0
+      - key: PAYPAL_MODE
+        value: mock
+      - key: MANDATE_DB
+        value: /tmp/mandate.db
